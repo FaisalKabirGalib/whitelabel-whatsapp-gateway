@@ -1,0 +1,8 @@
+.branding-page { padding: 2rem; max-width: 760px; }
+.branding-page > p { color: var(--text-secondary); margin: -1rem 0 2rem; }
+.branding-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.branding-form label { display: grid; gap: .4rem; color: var(--text-primary); font-size: .875rem; font-weight: 600; }
+.branding-form input { min-width: 0; border: 1px solid var(--border); border-radius: 6px; padding: .65rem .75rem; background: var(--bg-white); color: var(--text-primary); }
+.branding-form input[type="color"] { height: 42px; padding: .2rem; }
+.branding-form .primary-btn { grid-column: 1 / -1; justify-self: start; }
+@media (max-width: 640px) { .branding-page { padding: 1.25rem; } .branding-form { grid-template-columns: 1fr; } }
