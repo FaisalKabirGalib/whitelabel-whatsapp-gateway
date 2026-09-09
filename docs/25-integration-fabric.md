@@ -8,7 +8,7 @@
 
 ## 25.1 What it is
 
-The **Integration Fabric** is a core substrate that lets sandboxed marketplace plugins implement
+The **Integration Fabric** is a core substrate that lets sandboxed plugins implement
 bidirectional integrations with external systems — helpdesk agent inboxes, chatbot flow builders, CRMs —
 **without running their own server**. A third party ships an adapter as a normal marketplace plugin,
 declares its needs in the manifest, and never binds a port, never touches Redis or the queue, and never
@@ -27,7 +27,7 @@ public contract — Integration SDK v1** — because the contract, not any singl
 
 ## 25.2 Design principle: one new primitive, everything else a clone
 
-The overriding goal is to preserve the untrusted-worker safety invariants _by construction_. OpenWA
+The overriding goal is to preserve the untrusted-worker safety invariants _by construction_. RelayWapp WhatsApp Gateway
 plugins run in a capability-gated worker thread with no ambient host access (see
 [30 - Plugin Sandboxing](./30-plugin-sandboxing.md)). Every host↔worker message is a serializable POJO
 across a `structuredClone` boundary; host-initiated calls fail open on a timeout and drain on a worker
@@ -35,7 +35,7 @@ crash; permissions are manifest-static and cannot be widened by configuration; s
 host-side.
 
 Rather than invent new machinery that would have to re-earn those properties, the Integration Fabric is
-**~90% a faithful clone of seams OpenWA already ships**:
+**~90% a faithful clone of seams RelayWapp WhatsApp Gateway already ships**:
 
 | Concern                                                   | Cloned from                         |
 | --------------------------------------------------------- | ----------------------------------- |
@@ -60,7 +60,7 @@ flowchart LR
     WA[WhatsApp engine] -- message.received hook --> Core
     Provider[External provider] -- POST /api/ingress/:plugin/:instance/:route --> Core
 
-    subgraph Core["OpenWA host (core)"]
+    subgraph Core["RelayWapp WhatsApp Gateway host (core)"]
         Ingress[Ingress controller<br/>verify → dedup → persist → enqueue]
         Queue[(ingress-queue<br/>BullMQ / Redis)]
         Processor[Ingress processor]
@@ -155,7 +155,7 @@ Four tables live on the data connection, each created by a hand-authored dual-di
 
 ## 25.6 Security model
 
-- **Authentication inversion.** A provider webhook cannot carry an OpenWA API key, so ingress is public to
+- **Authentication inversion.** A provider webhook cannot carry a RelayWapp WhatsApp Gateway API key, so ingress is public to
   the API-key guard but validates a **per-instance HMAC (or shared secret)** over the **raw** request
   bytes with a constant-time comparison. The raw body is preserved by a verify callback on the body parser
   because a re-serialized payload is not byte-identical to what the provider signed. The global rate-limit
@@ -280,9 +280,8 @@ DLQ redrive, handover); **P2** shipped operator provisioning in v0.8.0 — an AD
 `GET|PATCH|DELETE /api/integration/plugins/:pluginId/instances/:instanceId` and
 `POST /api/integration/plugins/:pluginId/instances/:instanceId/regenerate-secret` on the item path) and a
 dashboard **Instances** tab; **P3** validated the substrate against a second ingress adapter
-(`supabase-otp-hook`). The official
-ingress adapters ship as sandboxed plugins in the
-[OpenWA-plugins](https://github.com/rmyndharis/OpenWA-plugins) catalog, not in this repository. What
+(`supabase-otp-hook`). The official ingress adapters ship as sandboxed plugins through the gateway's
+remote plugin catalog, not in this repository. What
 remains open is **P4**: the published SDK reference, a compatibility test suite, and multi-node routing.
 
 > **Provisioning is a first-class operator surface.** An ADMIN key mints a plugin instance against an

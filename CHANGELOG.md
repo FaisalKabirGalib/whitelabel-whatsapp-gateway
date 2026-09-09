@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Product documentation now presents the gateway as **RelayWapp WhatsApp Gateway**. Existing `openwa` runtime paths, service names, headers, and API-key prefixes remain current distribution identifiers and defaults; user-visible defaults can be changed through Branding.
 - Inbound commerce messages arrive typed `order` and `product` instead of a bodyless `unknown`, on both engines, and are accepted by webhook and automation-rule message-type filters.
 - The Python SDK's `ChatHistoryMessage` carries the commerce `order` and `product` blocks, with required fields and enums matching the contract.
 

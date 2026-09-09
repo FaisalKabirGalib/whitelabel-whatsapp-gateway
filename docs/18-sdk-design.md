@@ -2,7 +2,7 @@
 
 ## 18.1 Overview
 
-OpenWA ships five official, hand-written client libraries for the REST API. They are not generated from an OpenAPI spec — each is written directly against the real API surface (paths, request DTOs, response shapes) and **unit-tested with a mocked HTTP transport that asserts on the exact request path, method, and body**, so drift in what an SDK _sends_ is caught at test time rather than in production. That mechanism says nothing about what an SDK expects _back_; see §18.6 for how response shapes are held to the contract.
+RelayWapp WhatsApp Gateway ships five official, hand-written client libraries for the REST API. They are not generated from an OpenAPI spec — each is written directly against the real API surface (paths, request DTOs, response shapes) and **unit-tested with a mocked HTTP transport that asserts on the exact request path, method, and body**, so drift in what an SDK _sends_ is caught at test time rather than in production. That mechanism says nothing about what an SDK expects _back_; see §18.6 for how response shapes are held to the contract.
 
 | Language                | Package                                                                                | Install                              | Notes                                                                            |
 | ----------------------- | -------------------------------------------------------------------------------------- | ------------------------------------ | -------------------------------------------------------------------------------- |
@@ -82,7 +82,7 @@ async function main() {
   // Send a text message.
   const result = await client.messages.sendText('my-session', {
     chatId: '628123456789@c.us',
-    text: 'Hello from the OpenWA SDK!',
+    text: 'Hello from the RelayWapp SDK!',
   });
 
   console.log(result.messageId); // -> the WhatsApp message id
@@ -105,7 +105,7 @@ The constructor takes a single `OpenWAClientOptions` object. `baseUrl` and `apiK
 
 | Option           | Type                     | Required | Default            | Description                                                                                                                                                                    |
 | ---------------- | ------------------------ | -------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `baseUrl`        | `string`                 | yes      | —                  | Base URL of the OpenWA API, e.g. `http://localhost:2785`. A trailing slash is trimmed; a path prefix (e.g. `https://host/v1`) is preserved.                                    |
+| `baseUrl`        | `string`                 | yes      | —                  | Base URL of the RelayWapp WhatsApp Gateway API, e.g. `http://localhost:2785`. A trailing slash is trimmed; a path prefix (e.g. `https://host/v1`) is preserved.              |
 | `apiKey`         | `string`                 | yes      | —                  | API key sent as the `X-API-Key` header on every request.                                                                                                                       |
 | `timeoutMs`      | `number`                 | no       | `30000`            | Per-request timeout in milliseconds. Overridable per call via `RequestOptions.timeoutMs` on the raw `request()` method.                                                        |
 | `defaultHeaders` | `Record<string, string>` | no       | `{}`               | Headers merged onto every request. The `Content-Type: application/json` and `X-API-Key` headers always take precedence.                                                        |
@@ -446,7 +446,7 @@ client.sessions.start("my-session")
 # Send a text message
 result = client.messages.send_text("my-session", {
     "chatId": "628123456789@c.us",
-    "text": "Hello from the OpenWA Python SDK!",
+    "text": "Hello from the RelayWapp Python SDK!",
 })
 print(result["messageId"])
 
@@ -806,7 +806,7 @@ $client->sessions->start('my-session');
 
 $result = $client->messages->sendText('my-session', [
     'chatId' => '628123456789@c.us',
-    'text'   => 'Hello from the OpenWA PHP SDK!',
+    'text'   => 'Hello from the RelayWapp PHP SDK!',
 ]);
 
 echo $result['messageId'];
@@ -1118,7 +1118,7 @@ try {
 
 ## 18.5 n8n Community Node
 
-OpenWA's n8n integration is **not** part of these SDK packages. It is a separate community node maintained in its own repository, which speaks the same REST + webhook contract documented in [API Specification](./06-api-specification.md):
+RelayWapp WhatsApp Gateway's n8n integration is **not** part of these SDK packages. It is a separate community node maintained in its own repository, which speaks the same REST + webhook contract documented in [API Specification](./06-api-specification.md):
 
 - An **action/HTTP** path that calls the REST endpoints (e.g. `POST /api/sessions/:id/messages/send-text`) with the `X-API-Key` header.
 - A **trigger** path that registers a webhook (the `webhooks` resource) and receives inbound events, verifying the `X-OpenWA-Signature` HMAC.

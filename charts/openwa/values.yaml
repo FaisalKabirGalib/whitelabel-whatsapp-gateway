@@ -10,9 +10,9 @@
 replicaCount: 1
 
 image:
-  repository: ghcr.io/rmyndharis/openwa
-  # Defaults to the chart's appVersion when empty.
-  tag: ""
+  repository: ghcr.io/faisalkabirgalib/whitelabel-whatsapp-gateway
+  # The published image currently exposes the rolling latest tag.
+  tag: latest
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []

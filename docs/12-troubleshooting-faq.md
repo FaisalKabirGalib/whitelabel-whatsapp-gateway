@@ -172,7 +172,7 @@ docker compose up -d --build   # `docker compose pull` never updates it
 - You reach the instance directly over plain HTTP (a host:port allocation, a private network, a
   panel like Pterodactyl) rather than through a TLS-terminating reverse proxy
 
-**Cause:** In production OpenWA sends the CSP `upgrade-insecure-requests` directive, which tells the
+**Cause:** In production RelayWapp sends the CSP `upgrade-insecure-requests` directive, which tells the
 browser to upgrade every sub-resource fetch to HTTPS. That is correct behind a TLS proxy. Over plain
 HTTP the browser upgrades the dashboard's own script requests to `https://`, the non-TLS server
 cannot answer them, no JavaScript runs, and React never mounts — a blank page. The failure happens
@@ -191,7 +191,7 @@ docker compose exec openwa-api printenv NODE_ENV CSP_UPGRADE_INSECURE_REQUESTS
 A production boot that serves the dashboard with the opt-out unset prints a warning naming this
 setting. If you are behind a TLS proxy, ignore that warning — the directive is doing its job.
 
-> The alternative is to front OpenWA with a TLS-terminating reverse proxy (the shipped
+> The alternative is to front RelayWapp with a TLS-terminating reverse proxy (the shipped
 > `docker-compose.yml` topology), which serves the dashboard over HTTPS and makes the upgrade a
 > no-op.
 
@@ -288,7 +288,7 @@ stuck. Often seen on ARM64 (e.g. Raspberry Pi) after upgrading to v0.2.x.
 stalls the post-link sync. (If you also see `chrome_crashpad_handler: --database is required` _and the
 session never starts at all_, that is a different problem — see "Session fails to launch …" below.)
 
-**Fix:** OpenWA reconciles a missed `ready` event when WhatsApp Web is connected, the injected
+**Fix:** RelayWapp reconciles a missed `ready` event when WhatsApp Web is connected, the injected
 runtime is available, and whatsapp-web.js has populated the linked account identity. If your
 environment still hits a WA-Web compatibility hang, pin a known-good WA-Web version with
 `WWEBJS_WEB_VERSION`:
@@ -302,7 +302,7 @@ Restart the container after changing it. Pick the build from
 [wppconnect-team/wa-version](https://github.com/wppconnect-team/wa-version) (the `html/` folder) — a
 build the registry no longer serves is fetched, missed, and silently ignored, leaving you on the
 default behaviour rather than the pin you asked for. With
-`WWEBJS_WEB_VERSION` unset, `latest`, or `auto` (the default), OpenWA auto-resolves a settled build
+`WWEBJS_WEB_VERSION` unset, `latest`, or `auto` (the default), RelayWapp auto-resolves a settled build
 from that registry and pins its HTML — note this HTML is fetched from a third-party repository and
 executed inside the `web.whatsapp.com` origin without an integrity check. Set
 `WWEBJS_WEB_VERSION=off` to disable pinning and use the first-party build served by WhatsApp.
@@ -430,7 +430,7 @@ limit the instant before the failure — that tells you A vs B. If neither moves
 > **Engine:** This issue applies to the `whatsapp-web.js` engine only (Chromium/Puppeteer-based). It does not affect `ENGINE_TYPE=baileys`.
 
 **Symptoms:** A `whatsapp-web.js` session that was already authenticated fails within seconds of
-**Start** after upgrading OpenWA — no QR is produced — and the session's `lastError` / container log
+**Start** after upgrading RelayWapp — no QR is produced — and the session's `lastError` / container log
 show:
 
 ```text
@@ -476,9 +476,9 @@ so the stop → start sequence alone is sufficient once the engine is gone.
 **Symptoms:** The session reaches `ready` normally, then at almost exactly five minutes WhatsApp Web
 reloads, briefly returns to `CONNECTED`/`hasSynced`, and navigates to
 `?post_logout=1&logout_reason=0`. The phone silently removes the companion from Linked devices and
-OpenWA returns to a fresh QR because `whatsapp-web.js` deletes LocalAuth credentials on `LOGOUT`.
+RelayWapp returns to a fresh QR because `whatsapp-web.js` deletes LocalAuth credentials on `LOGOUT`.
 
-**Cause:** OpenWA used to backfill active WhatsApp Status posts immediately in its `ready` callback by
+**Cause:** RelayWapp used to backfill active WhatsApp Status posts immediately in its `ready` callback by
 fetching `status@broadcast`. Some accounts tolerate that request, but affected accounts have the new
 companion revoked at WhatsApp Web's first scheduled reload. A minimal `whatsapp-web.js` client using
 the same container, browser, account and Web build remains linked when it does not perform this eager
@@ -503,7 +503,7 @@ and only gives up after five clicks that fail to land — at that point a human 
 once, so the session stops instead of being silently unlinked by WhatsApp about five minutes later.
 
 > **If the modal is not in English:** the detector matches the English button label (`Continue`) and
-> heading ("What's new"). The language WhatsApp Web renders in follows the browser locale, which OpenWA
+> heading ("What's new"). The language WhatsApp Web renders in follows the browser locale, which RelayWapp
 > does not set, so it is whatever the browser the container launches defaults to
 > (`PUPPETEER_EXECUTABLE_PATH` — Chrome for Testing on amd64, Debian's `chromium` on arm64). You can
 > pin it yourself by appending `--lang=en-US` to `PUPPETEER_ARGS` — that variable **replaces** the
@@ -641,7 +641,7 @@ curl -H "X-API-Key: $API_KEY" \
 - Startup logs may contain `The installed whatsapp-web.js is missing the message-id backport…`
 
 **Cause:** WhatsApp Web 2.3000.x renamed the internal message-id property that whatsapp-web.js
-reads. OpenWA ships a backport that restores it, applied at install time by
+reads. RelayWapp ships a backport that restores it, applied at install time by
 `scripts/patch-wwebjs-201832.js`. When the install cannot run it — neither GNU `patch` nor `git`
 available, or `npm install --ignore-scripts` — whatsapp-web.js stays unpatched and every operation
 that reads a message id fails. Source installs only; the Docker image always applies the backport.
@@ -669,13 +669,13 @@ rm -rf node_modules/whatsapp-web.js && npm ci
 
 **Symptoms:**
 
-- Startup logs contain `The installed whatsapp-web.js is missing N of OpenWA's install-time patches: …`,
+- Startup logs contain `The installed whatsapp-web.js is missing N of RelayWapp's install-time patches: …`,
   or the same line naming `@whiskeysockets/baileys`
 - One capability fails while everything around it works: an unnamed `500` from a single route,
   block/unblock refusing every id, a status media send that never arrives, a group description that
   cannot be set, an app-state resync that never settles
 
-**Cause:** OpenWA applies nine exact source transforms to its engine libraries at install time
+**Cause:** RelayWapp applies nine exact source transforms to its engine libraries at install time
 (docs/29 §29.3). The Docker image runs them without `--best-effort`, so a source shape a patcher
 cannot recognise fails the image build. A source install runs them through `scripts/postinstall.js`
 with `--best-effort`, where a patcher that cannot apply prints one line into a long `npm install`
@@ -962,7 +962,7 @@ ANALYZE sessions;
 ANALYZE messages;
 ```
 
-Pooling and caching are environment variables — OpenWA has no config file:
+Pooling and caching are environment variables — RelayWapp has no config file:
 
 ```bash
 # Connection pool + timeouts (applied to the PostgreSQL data connection)
@@ -995,7 +995,7 @@ sqlite3 ./data/openwa.sqlite ".timeout 30000"
 
 # Check WAL mode
 sqlite3 ./data/openwa.sqlite "PRAGMA journal_mode;"
-# Default is: delete (rollback journal) — OpenWA does not force WAL
+# Default is: delete (rollback journal) — RelayWapp does not force WAL
 
 # Optionally enable WAL mode to reduce writer/reader lock contention
 sqlite3 ./data/openwa.sqlite "PRAGMA journal_mode=WAL;"
@@ -1108,9 +1108,9 @@ docker exec openwa-api curl http://host.docker.internal:8080
 
 ### General Questions
 
-**Q: Is OpenWA safe to use?**
+**Q: Is RelayWapp safe to use?**
 
-> A: OpenWA uses unofficial WhatsApp Web API. While we implement best practices to avoid detection, there's inherent risk of account restrictions. We recommend:
+> A: RelayWapp uses the unofficial WhatsApp Web API. While we implement best practices to avoid detection, there's inherent risk of account restrictions. We recommend:
 >
 > - Use dedicated phone number (not personal)
 > - Don't send spam or bulk unsolicited messages
@@ -1136,7 +1136,7 @@ docker exec openwa-api curl http://host.docker.internal:8080
 
 **Q: Can I use WhatsApp Business account?**
 
-> A: Yes, OpenWA works with both personal and WhatsApp Business accounts. Note that WhatsApp Business API (official Meta API) is different and not supported.
+> A: Yes, RelayWapp works with both personal and WhatsApp Business accounts. Note that WhatsApp Business API (official Meta API) is different and not supported.
 
 **Q: How to avoid getting banned?**
 
@@ -1217,26 +1217,26 @@ server {
 }
 ```
 
-**Then set `TRUSTED_PROXIES` in your `.env`.** With it empty, OpenWA correctly refuses to trust the
+**Then set `TRUSTED_PROXIES` in your `.env`.** With it empty, RelayWapp correctly refuses to trust the
 spoofable `X-Forwarded-For` header, which has a side effect worth knowing: every client appears as
 the proxy's address, so ALL traffic shares one rate-limit bucket (a single abuser rate-limits
 everyone) and per-key IP allowlists (`allowedIps`) evaluate the proxy for every caller. Name the
 proxy to key limits per client. For the bundled compose (whose published port traverses Docker's
 NAT, so the container sees the bridge gateway, not 127.0.0.1) use the compose network subnet, e.g.
 `TRUSTED_PROXIES=172.18.0.0/16`; a bare-metal nginx talking to the process directly can name
-`127.0.0.1`. OpenWA logs a one-time warning at the first proxied request when the header is present
+`127.0.0.1`. RelayWapp logs a one-time warning at the first proxied request when the header is present
 but the list is empty.
 
 **Q: How to run behind Traefik / Coolify?**
 
-Traefik forwards WebSocket upgrades automatically, so OpenWA's single-port Socket.IO channel works with a normal HTTP router. Two things keep a public deployment stable:
+Traefik forwards WebSocket upgrades automatically, so RelayWapp's single-port Socket.IO channel works with a normal HTTP router. Two things keep a public deployment stable:
 
-**1. Let Traefik reach the container over the Docker network — don't _also_ publish the host port.** This is the most common cause of intermittent `504`s on Coolify/Traefik. If OpenWA publishes its port to the host (`ports: ["2785:2785"]`) **and** Traefik also routes to it, every request additionally traverses Docker's userland `docker-proxy`. OpenWA holds a long-lived Socket.IO connection per client (HTTP long-poll → WebSocket upgrade), so those held-open connections accumulate across both hops and gradually exhaust the connection pool to the single upstream — the Dashboard, API, and real-time channel then `504` together "after some time", while `curl http://localhost:2785/api/health/ready` keeps returning `200`. Front it with Traefik on a shared network and **expose** the port internally instead of **publishing** it:
+**1. Let Traefik reach the container over the Docker network — don't _also_ publish the host port.** This is the most common cause of intermittent `504`s on Coolify/Traefik. If RelayWapp publishes its port to the host (`ports: ["2785:2785"]`) **and** Traefik also routes to it, every request additionally traverses Docker's userland `docker-proxy`. RelayWapp holds a long-lived Socket.IO connection per client (HTTP long-poll → WebSocket upgrade), so those held-open connections accumulate across both hops and gradually exhaust the connection pool to the single upstream — the Dashboard, API, and real-time channel then `504` together "after some time", while `curl http://localhost:2785/api/health/ready` keeps returning `200`. Front it with Traefik on a shared network and **expose** the port internally instead of **publishing** it:
 
 ```yaml
 services:
   openwa:
-    image: ghcr.io/rmyndharis/openwa:latest
+    image: ghcr.io/faisalkabirgalib/whitelabel-whatsapp-gateway:latest
     expose:
       - '2785' # internal only — drop any public `ports:` mapping when Traefik is on this network
     networks: [proxy]
@@ -1266,7 +1266,7 @@ entryPoints:
         idleTimeout: 600s
 ```
 
-Remember OpenWA is **single-port**: the Dashboard, REST API, and Socket.IO all share `:2785` behind one router, so a choked upstream takes all three down at once. A Dashboard stuck on "Connecting…" while `localhost` is healthy is the proxy hop, not the app.
+Remember RelayWapp is **single-port**: the Dashboard, REST API, and Socket.IO all share `:2785` behind one router, so a choked upstream takes all three down at once. A Dashboard stuck on "Connecting…" while `localhost` is healthy is the proxy hop, not the app.
 
 **Q: How to backup sessions automatically?**
 
@@ -1388,7 +1388,7 @@ When creating GitHub issue, include:
 ```markdown
 ## Environment
 
-- OpenWA version: x.x.x
+- RelayWapp version: x.x.x
 - Docker version: x.x.x
 - OS: Ubuntu 22.04 / macOS / Windows
 - Database: SQLite / PostgreSQL
@@ -1428,10 +1428,9 @@ When creating GitHub issue, include:
 
 ### Community Resources
 
-- **GitHub Issues**: [github.com/rmyndharis/OpenWA/issues](https://github.com/rmyndharis/OpenWA/issues)
-- **Discussions**: [github.com/rmyndharis/OpenWA/discussions](https://github.com/rmyndharis/OpenWA/discussions)
-- **Discord**: [discord.gg/openwa](https://discord.gg/openwa) (if available)
-- **Stack Overflow**: Tag with `openwa`
+- **GitHub Issues**: [RelayWapp issues](https://github.com/FaisalKabirGalib/whitelabel-whatsapp-gateway/issues)
+- **Discussions**: [RelayWapp discussions](https://github.com/FaisalKabirGalib/whitelabel-whatsapp-gateway/discussions)
+- **Stack Overflow**: Use the RelayWapp tag if available
 ---
 
 <div align="center">
@@ -1440,3 +1439,4 @@ When creating GitHub issue, include:
 
 </div>
 ```
+**Then set `TRUSTED_PROXIES` in your `.env`.** With it empty, RelayWapp correctly refuses to trust the

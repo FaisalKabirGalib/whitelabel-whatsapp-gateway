@@ -1,6 +1,6 @@
-# OpenWA Java SDK
+# RelayWapp Java SDK
 
-Official Java client for the [OpenWA](https://github.com/rmyndharis/OpenWA)
+Official Java client for [RelayWapp](https://github.com/FaisalKabirGalib/whitelabel-whatsapp-gateway)
 WhatsApp API Gateway.
 
 Hand-written against the exact API surface (paths, DTOs, response shapes) and
@@ -40,7 +40,7 @@ client.sessions.start("my-session");
 MessageResponse result = client.messages.sendText("my-session",
     SendTextRequest.builder()
         .chatId("628123456789@c.us")
-        .text("Hello from the OpenWA Java SDK!")
+        .text("Hello from the RelayWapp Java SDK!")
         .build());
 
 System.out.println(result.messageId());

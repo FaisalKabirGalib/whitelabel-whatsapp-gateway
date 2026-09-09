@@ -4,7 +4,7 @@
 
 ### Our Pledge
 
-OpenWA is committed to providing a welcoming and inclusive environment for everyone. We pledge to make participation in our project and community a harassment-free experience for all, regardless of:
+RelayWapp WhatsApp Gateway is committed to providing a welcoming and inclusive environment for everyone. We pledge to make participation in our project and community a harassment-free experience for all, regardless of:
 
 - Age, body size, disability, ethnicity, sex characteristics
 - Gender identity and expression
@@ -57,19 +57,16 @@ flowchart LR
 # 1. Fork the repository on GitHub
 
 # 2. Clone your fork
-git clone https://github.com/YOUR_USERNAME/openwa.git
-cd openwa
+git clone https://github.com/YOUR_USERNAME/whitelabel-whatsapp-gateway.git
+cd whitelabel-whatsapp-gateway
 
-# 3. Add upstream remote
-git remote add upstream https://github.com/rmyndharis/OpenWA.git
-
-# 4. Install dependencies
+# 3. Install dependencies
 npm install
 
-# 5. Copy environment file
+# 4. Copy environment file
 cp .env.example .env
 
-# 6. Start development
+# 5. Start development
 npm run dev
 ```
 
@@ -215,13 +212,13 @@ async function sendTextMessage(sessionId: string, phone: string, text: string): 
 
 Before opening an Issue, decide whether it belongs here or in **GitHub Discussions**.
 Most misrouted reports are configuration, provider, or environment questions rather than
-defects in OpenWA — routing them correctly upfront saves time for everyone (faster answers
+defects in RelayWapp WhatsApp Gateway — routing them correctly upfront saves time for everyone (faster answers
 for you, cleaner triage for maintainers). When in doubt, open a Discussion first; it can
 always be promoted to an Issue once a real defect is confirmed.
 
 | Open an **Issue**                                                        | Open a **Discussion**                                                       |
 | ------------------------------------------------------------------------ | --------------------------------------------------------------------------- |
-| Reproducible defect in OpenWA code with clear steps, expected vs. actual | Setup / configuration help ("my proxy doesn't work, how do I configure X?") |
+| Reproducible defect in RelayWapp WhatsApp Gateway code with clear steps, expected vs. actual | Setup / configuration help ("my proxy doesn't work, how do I configure X?") |
 | Crash, panic, wrong API response, regression after upgrade               | Provider-specific quirks (webshare, IPRoyal, brightdata, Twilio, etc.)      |
 | Documented behavior contradicted by actual behavior                      | "Is X possible?" / "What's the best way to Y?"                              |
 | Security issue (use `SECURITY.md`, not a public issue)                   | Hosting-platform / network / firewall questions                             |
@@ -229,7 +226,7 @@ always be promoted to an Issue once a real defect is confirmed.
 **Common gray-zone examples (these go to Discussions, not Issues):**
 
 - "My proxy works on first start but fails after pod restart" → almost always a
-  provider-side IP allowlist, not an OpenWA bug. See `docs/12-troubleshooting-faq.md`.
+  provider-side IP allowlist, not a RelayWapp WhatsApp Gateway bug. See `docs/12-troubleshooting-faq.md`.
 - "WhatsApp blocked my number" → provider/WhatsApp policy, not a code defect.
 - "How do I deploy behind nginx/Traefik?" → configuration, use Discussions.
 - "Why is my QR not showing?" → start with the troubleshooting FAQ; open an Issue only
@@ -247,7 +244,7 @@ Blank issues are disabled — GitHub presents the **Bug report** form
 | Field              | Notes                                                                        |
 | ------------------ | ---------------------------------------------------------------------------- |
 | Pre-flight         | Both checkboxes: searched for duplicates, and on the latest released version |
-| OpenWA version     | e.g. `0.2.1` (shown on the dashboard Login screen) or a commit SHA           |
+| RelayWapp version  | e.g. `0.2.1` (shown on the dashboard Login screen) or a commit SHA           |
 | Deployment         | Docker Compose / Docker (manual run) / Bare metal (npm) / Other              |
 | Database           | SQLite (default) / PostgreSQL                                                |
 | What happened?     | The bug and its impact                                                       |
@@ -285,7 +282,7 @@ not supported on whatsapp-web.js, the default engine.
 | `help wanted`         | Extra attention needed                                                          |
 | `question`            | Further information requested                                                   |
 | `needs-info`          | Awaiting reporter input to proceed                                              |
-| `not-a-bug`           | External/environmental cause (provider, network, hosting); not an OpenWA defect |
+| `not-a-bug`           | External/environmental cause (provider, network, hosting); not a RelayWapp WhatsApp Gateway defect |
 | `move-to-discussions` | Belongs in GitHub Discussions, not Issues — see §20.3 Issue vs. Discussions     |
 | `invalid`             | This doesn't seem right                                                         |
 | `wontfix`             | This will not be worked on                                                      |
@@ -293,11 +290,11 @@ not supported on whatsapp-web.js, the default engine.
 | `security`            | Security-related                                                                |
 | `design`              | Architecture / design discussion                                                |
 | `engine:baileys`      | Baileys engine specific                                                         |
-| `upstream-blocked`    | Blocked on upstream library/WhatsApp behavior; no OpenWA-side fix               |
+| `upstream-blocked`    | Blocked on upstream library/WhatsApp behavior; no RelayWapp WhatsApp Gateway-side fix |
 
 ## 20.4 Community Channels
 
-### GitHub Discussions
+### [GitHub Discussions](https://github.com/FaisalKabirGalib/whitelabel-whatsapp-gateway/discussions)
 
 Primary community forum for:
 
@@ -309,15 +306,15 @@ Primary community forum for:
 Categories:
 
 - **Announcements**: Official announcements from maintainers
-- **Q&A**: Questions about using OpenWA
+- **Q&A**: Questions about using RelayWapp WhatsApp Gateway
 - **Ideas**: Feature suggestions and brainstorming
-- **Show and Tell**: Share your projects using OpenWA
+- **Show and Tell**: Share your projects using RelayWapp WhatsApp Gateway
 - **General**: General discussion
 
 ### Support Priority
 
-1. **GitHub Issues** - Bug reports and feature requests
-2. **GitHub Discussions** - Questions and general discussion
+1. **[GitHub Issues](https://github.com/FaisalKabirGalib/whitelabel-whatsapp-gateway/issues)** - Bug reports and feature requests
+2. **[GitHub Discussions](https://github.com/FaisalKabirGalib/whitelabel-whatsapp-gateway/discussions)** - Questions and general discussion
 
 There is no official real-time chat server. The issue-template contact links
 (`.github/ISSUE_TEMPLATE/config.yml`) point only to the documentation and to the private
@@ -412,11 +409,7 @@ hardening notes for operators. The summary below tracks it.
 **DO NOT** report security vulnerabilities through public GitHub issues, discussions, or
 pull requests.
 
-Report privately through either channel:
-
-1. **GitHub Security Advisories** (preferred) — open a private report at
-   <https://github.com/rmyndharis/OpenWA/security/advisories/new>
-2. **Email** — yudhi@rmyndharis.com
+Report privately through **[GitHub Security Advisories](https://github.com/FaisalKabirGalib/whitelabel-whatsapp-gateway/security/advisories/new)**.
 
 Include, where possible:
 

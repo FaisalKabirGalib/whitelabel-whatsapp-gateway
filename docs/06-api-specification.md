@@ -49,11 +49,11 @@ A key may additionally be scoped to specific sessions (`allowedSessions`) and/or
 
 ### API-Key Lifecycle
 
-OpenWA seeds an initial admin key on first run (printed to the startup log and written to `data/.api-key`, or `/app/data/.api-key` in Docker). Use it to mint scoped, lower-privilege keys for integrations. Full key creation, listing, rotation, and revocation are documented under the auth resource in **§6.4.9 (API Keys)**.
+RelayWapp seeds an initial admin key on first run (printed to the startup log and written to `data/.api-key`, or `/app/data/.api-key` in Docker). Use it to mint scoped, lower-privilege keys for integrations. Full key creation, listing, rotation, and revocation are documented under the auth resource in **§6.4.9 (API Keys)**.
 
 ## 6.2 Response Format
 
-> **OpenWA returns the raw handler payload directly — there is NO `{ success, data, meta }` envelope.** A resource route returns the resource object as-is; a list route returns a **bare JSON array**. Read fields directly (`response.id`, not `response.data.id`).
+> **RelayWapp returns the raw handler payload directly — there is NO `{ success, data, meta }` envelope.** A resource route returns the resource object as-is; a list route returns a **bare JSON array**. Read fields directly (`response.id`, not `response.data.id`).
 
 ### Success Response
 
@@ -111,7 +111,7 @@ Validation failures (`statusCode: 400`) return `message` as an **array** of fiel
 
 ### Timestamp Conventions
 
-OpenWA uses **two** timestamp representations — be careful which a field is:
+RelayWapp uses **two** timestamp representations — be careful which a field is:
 
 - **Message timestamps are epoch numbers (Unix seconds), not ISO strings.** This applies to the `timestamp` field on messages returned by send responses, history, and persisted message records (the persisted column is stored as a bigint and surfaced as a `number`).
 - **Entity audit fields use ISO-8601 UTC strings** (example: `2026-02-02T10:00:00.000Z`). This applies to `createdAt` / `updatedAt` on persisted entities, `expiresAt`, batch `startedAt` / `completedAt`, and similar metadata fields.
@@ -1236,7 +1236,7 @@ Get persisted message history for a session from the local DB (paginated, filter
       "chatId": "628123456789@c.us",
       "from": "628123456789@c.us",
       "to": "628987654321@c.us",
-      "body": "Hello from OpenWA!",
+      "body": "Hello from RelayWapp!",
       "type": "text",
       "direction": "outgoing",
       "timestamp": 1719312000,
@@ -1581,7 +1581,7 @@ Send a plain text message.
 | quotedMessageId   | string   | No       | non-empty                      | Quote an earlier message, making this a reply. See [Quoted sends](#quoted-sends) below       |
 
 ```json
-{ "chatId": "628123456789@c.us", "text": "Hello from OpenWA!" }
+{ "chatId": "628123456789@c.us", "text": "Hello from RelayWapp!" }
 ```
 
 ```json
@@ -3258,7 +3258,7 @@ Bare `Template[]` array (no pagination, no envelope). Ordered by `createdAt` DES
     "sessionId": "9b1c0e2a-3d4f-5a6b-7c8d-9e0f1a2b3c4d",
     "name": "order-confirmation",
     "body": "Hi {{customer}}, your order {{orderId}} has shipped.",
-    "header": "OpenWA Store",
+    "header": "RelayWapp Store",
     "footer": "Reply STOP to unsubscribe.",
     "createdAt": "2026-06-25T10:15:00.000Z",
     "updatedAt": "2026-06-25T10:15:00.000Z"
@@ -3291,7 +3291,7 @@ Raw `Template` entity (no envelope).
   "sessionId": "9b1c0e2a-3d4f-5a6b-7c8d-9e0f1a2b3c4d",
   "name": "order-confirmation",
   "body": "Hi {{customer}}, your order {{orderId}} has shipped.",
-  "header": "OpenWA Store",
+  "header": "RelayWapp Store",
   "footer": "Reply STOP to unsubscribe.",
   "createdAt": "2026-06-25T10:15:00.000Z",
   "updatedAt": "2026-06-25T10:15:00.000Z"
@@ -3325,7 +3325,7 @@ Create a message template for the session (with `{{variable}}` placeholders in t
 {
   "name": "order-confirmation",
   "body": "Hi {{customer}}, your order {{orderId}} has shipped.",
-  "header": "OpenWA Store",
+  "header": "RelayWapp Store",
   "footer": "Reply STOP to unsubscribe."
 }
 ```
@@ -3340,7 +3340,7 @@ Returns the saved `Template` entity raw (no envelope). The lazy `session` relati
   "sessionId": "9b1c0e2a-3d4f-5a6b-7c8d-9e0f1a2b3c4d",
   "name": "order-confirmation",
   "body": "Hi {{customer}}, your order {{orderId}} has shipped.",
-  "header": "OpenWA Store",
+  "header": "RelayWapp Store",
   "footer": "Reply STOP to unsubscribe.",
   "createdAt": "2026-06-25T10:15:00.000Z",
   "updatedAt": "2026-06-25T10:15:00.000Z"
@@ -3388,7 +3388,7 @@ Loads via lookup (`404` if missing), patches the provided fields, saves, and ret
   "sessionId": "9b1c0e2a-3d4f-5a6b-7c8d-9e0f1a2b3c4d",
   "name": "order-confirmation",
   "body": "Hi {{customer}}, your order {{orderId}} is out for delivery.",
-  "header": "OpenWA Store",
+  "header": "RelayWapp Store",
   "footer": "Thanks for shopping with us.",
   "createdAt": "2026-06-25T10:15:00.000Z",
   "updatedAt": "2026-06-25T11:02:00.000Z"
@@ -3585,7 +3585,7 @@ List all channels/newsletters the session is subscribed to.
 [
   {
     "id": "120363000000000000@newsletter",
-    "name": "OpenWA Updates",
+    "name": "RelayWapp Updates",
     "description": "Release notes and tips",
     "inviteCode": "ABC123xyz",
     "subscriberCount": 1042,
@@ -3618,7 +3618,7 @@ Get a single channel/newsletter by its id.
 ```json
 {
   "id": "120363000000000000@newsletter",
-  "name": "OpenWA Updates",
+  "name": "RelayWapp Updates",
   "description": "Release notes and tips",
   "inviteCode": "ABC123xyz",
   "subscriberCount": 1042,
@@ -3811,7 +3811,7 @@ Subscribe to a channel using its invite code.
 ```json
 {
   "id": "120363000000000000@newsletter",
-  "name": "OpenWA Updates",
+  "name": "RelayWapp Updates",
   "description": "Release notes and tips",
   "inviteCode": "ABC123xyz",
   "subscriberCount": 1042,
@@ -3867,7 +3867,7 @@ create and update are the same operation and there is no server-assigned id to h
 why the route is `PUT /labels/:labelId` rather than `POST /labels`. Reusing an existing id **rewrites
 that label** instead of failing, because the protocol has no create-only form.
 
-**Reads are store-backed, not engine-direct.** `GET /status` and `GET /status/:id` no longer call the engine — they read from an OpenWA-side store that ingests inbound status/story broadcasts as they arrive (plus a best-effort backfill of currently-active stories on session connect), with a 24h TTL matching WhatsApp's own story expiry. This makes reads **identical on both engines**: `whatsapp-web.js` (which had a native `getBroadcasts()`/`getBroadcastById()` path) and Baileys (which never had one — `fetchStatus` only returns the _about_ text, not stories, so the raw engine methods still throw `501` if called directly, they're just no longer on the read path) now return the same shape from the same source. A status older than 24h, or received before the store existed, will not appear.
+**Reads are store-backed, not engine-direct.** `GET /status` and `GET /status/:id` no longer call the engine — they read from a RelayWapp-side store that ingests inbound status/story broadcasts as they arrive (plus a best-effort backfill of currently-active stories on session connect), with a 24h TTL matching WhatsApp's own story expiry. This makes reads **identical on both engines**: `whatsapp-web.js` (which had a native `getBroadcasts()`/`getBroadcastById()` path) and Baileys (which never had one — `fetchStatus` only returns the _about_ text, not stories, so the raw engine methods still throw `501` if called directly, they're just no longer on the read path) now return the same shape from the same source. A status older than 24h, or received before the store existed, will not appear.
 
 #### GET /api/sessions/:sessionId/labels
 
@@ -4168,7 +4168,7 @@ Post a text status (story) to the session's status feed. The recipients allow-li
 | font            | integer  | no       | `@IsIn([0, 1, 2, 6, 7, 8, 9, 10])` — `3`–`5` are rejected with `400` | WhatsApp status font index: `0` (default), `1`, `2`, `6` (bold), `7`, `8`, `9`, `10`. whatsapp-web.js honors only `0`–`7` and clamps anything above back to the default                                                                                                                                                   |
 
 ```json
-{ "text": "Hello from OpenWA!", "recipients": ["6281234567890@c.us"], "backgroundColor": "#25D366", "font": 2 }
+{ "text": "Hello from RelayWapp!", "recipients": ["6281234567890@c.us"], "backgroundColor": "#25D366", "font": 2 }
 ```
 
 **Response** `201`
@@ -4894,7 +4894,76 @@ The key is read from the `X-API-Key` header, not the body; send an empty body. T
 
 > Implemented by `AuthValidateController` (`@Controller('auth')`), sharing the same `/api/auth` base.
 
-### 6.4.10 System (Health, Metrics, Stats, Settings, Audit)
+### 6.4.10 Branding
+
+Dashboard and API-documentation branding is stored as a single global record. Branding contains presentation metadata only; it never returns credentials, API keys, or other secrets.
+
+#### GET /api/branding
+
+Get the public dashboard branding. This route is public and does not require an API key. If the branding record has not yet been created, the server creates it with its defaults before returning it.
+
+**Auth:** public
+
+**Response** `200`
+
+```json
+{
+  "id": 1,
+  "productName": "OpenWA",
+  "logoUrl": null,
+  "faviconUrl": null,
+  "primaryColor": "#25D366",
+  "accentColor": "#128C7E",
+  "loginTitle": null,
+  "loginMessage": null,
+  "websiteUrl": null,
+  "supportUrl": null,
+  "docsUrl": null,
+  "swaggerTitle": null,
+  "swaggerDescription": null,
+  "createdAt": "2026-06-25T09:00:00.000Z",
+  "updatedAt": "2026-06-25T09:00:00.000Z"
+}
+```
+
+`id` is always `1`. `createdAt` and `updatedAt` are ISO-8601 UTC timestamps. Nullable fields are returned as `null` when unset.
+
+#### PUT /api/branding
+
+Update the global dashboard branding. The body is a partial `UpdateBrandingDto`; omitted fields retain their current values. Nullable fields may be set to `null` to clear them. A successful update is recorded in the audit log as `branding_updated`, with the changed field names only. Changes to `swaggerTitle` or `swaggerDescription` also update the in-memory Swagger document for subsequent reads.
+
+**Auth:** API key (ADMIN) that is not restricted to specific sessions (`@RequireUnscopedKey`)
+
+**Request body** — `UpdateBrandingDto` (any subset)
+
+| Field                | Type             | Constraints                                      | Description                                      |
+| -------------------- | ---------------- | ------------------------------------------------ | ------------------------------------------------ |
+| `productName`        | string           | non-empty, max 100                               | Product name shown in the dashboard              |
+| `logoUrl`            | string \| null  | HTTPS URL, max 500                               | Logo image URL; `null` clears it                 |
+| `faviconUrl`         | string \| null  | HTTPS URL, max 500                               | Favicon URL; `null` clears it                    |
+| `primaryColor`       | string           | `#RRGGBB` hex colour                             | Primary dashboard colour                         |
+| `accentColor`        | string           | `#RRGGBB` hex colour                             | Accent dashboard colour                          |
+| `loginTitle`         | string \| null  | max 200                                          | Login-page title; `null` clears it               |
+| `loginMessage`       | string \| null  | max 500                                          | Login-page message; `null` clears it             |
+| `websiteUrl`         | string \| null  | HTTPS URL, max 500                               | Product website URL; `null` clears it            |
+| `supportUrl`         | string \| null  | HTTPS URL, max 500                               | Support URL; `null` clears it                    |
+| `docsUrl`            | string \| null  | HTTPS URL, max 500                               | Documentation URL; `null` clears it              |
+| `swaggerTitle`       | string \| null  | max 200                                          | Swagger/OpenAPI document title; `null` clears it |
+| `swaggerDescription` | string \| null  | max 2000                                         | Swagger/OpenAPI description; `null` clears it    |
+
+```json
+{
+  "productName": "Acme Messaging",
+  "primaryColor": "#0F766E",
+  "loginTitle": "Welcome to Acme"
+}
+```
+
+**Response** `200` — the complete updated branding object (same shape as the GET response).
+
+**Errors:** `400` validation failure or unknown body field · `401` missing/invalid API key · `403` key lacks ADMIN role or is restricted to specific sessions
+
+### 6.4.11 System (Health, Metrics, Stats, Settings, Audit)
 
 System endpoints expose operational status, Prometheus metrics, aggregate statistics, runtime settings, and the audit log. Health and metrics use non-standard auth (public / Bearer token); stats, settings and audit use the API key, with several routes gated to `ADMIN`.
 
@@ -4961,7 +5030,7 @@ During shutdown the `details` instead read `{ "shutdown": { "status": "draining"
 
 #### GET /api/metrics
 
-Prometheus exposition scrape of OpenWA process + session + message metrics; gated by a `METRICS_TOKEN` bearer (disabled when the token is unset).
+Prometheus exposition scrape of RelayWapp process + session + message metrics; gated by a `METRICS_TOKEN` bearer (disabled when the token is unset).
 
 **Auth:** Bearer METRICS_TOKEN — `Authorization: Bearer <METRICS_TOKEN>`. This route is `@Public()` (it bypasses the `X-API-Key` guard); access is instead validated inside the service with a constant-time compare. The `Bearer ` prefix is stripped case-insensitively. Hidden from Swagger.
 
@@ -4975,7 +5044,7 @@ claiming every session had dropped. `openwa_stats_available` is what tells the t
 so alert on it rather than reading a missing series as zero. `docs/10` lists every series.
 
 ```
-# HELP openwa_up 1 if the OpenWA process is running
+# HELP openwa_up 1 if the RelayWapp process is running
 # TYPE openwa_up gauge
 openwa_up 1
 # TYPE openwa_process_uptime_seconds gauge
@@ -5172,7 +5241,7 @@ Unlike the other list routes this one is **not** a bare array: `data` is the pag
 
 **Errors:** `401` missing/invalid API key · `403` key role below ADMIN
 
-### 6.4.11 Administration (Infrastructure, Plugins, MCP)
+### 6.4.12 Administration (Infrastructure, Plugins, MCP)
 
 Admin-facing operations: infrastructure status & config, the data/storage migration tooling, plugin lifecycle, and the optional MCP transport. Almost every route is **API key (ADMIN)**; the two exceptions are the public `GET /api/infra/health` and the `POST /mcp` JSON-RPC endpoint (see end of section).
 
@@ -5224,7 +5293,7 @@ Aggregate infrastructure status (database, Redis, queue, storage, engine).
 
 The `queue.webhooks` counters are live BullMQ job counts (`pending` = waiting + active + delayed; plus `completed`/`failed`), degrading to zeros when the queue is disabled or Redis is unreachable. `redis.connected` is a live probe.
 
-`builtIn` (on `database`/`redis`/`storage`) reports whether OpenWA's own bundled container is actually running _and_ backing this service, detected live from the labelled container; when Docker is unreachable it falls back to the saved `*_BUILTIN` intent from `data/.env.generated`. In S3 mode `storage` additionally carries `bucket` (when one is configured) and `s3Available` (a throttled re-probe); in local mode neither key is present. `engine.webVersion`/`engine.webVersionSource` (`pinned` / `auto` / `native`) appear only on `whatsapp-web.js`; `webVersion` is `null` until the auto-resolve first succeeds.
+`builtIn` (on `database`/`redis`/`storage`) reports whether RelayWapp's own bundled container is actually running _and_ backing this service, detected live from the labelled container; when Docker is unreachable it falls back to the saved `*_BUILTIN` intent from `data/.env.generated`. In S3 mode `storage` additionally carries `bucket` (when one is configured) and `s3Available` (a throttled re-probe); in local mode neither key is present. `engine.webVersion`/`engine.webVersionSource` (`pinned` / `auto` / `native`) appear only on `whatsapp-web.js`; `webVersion` is `null` until the auto-resolve first succeeds.
 
 **Errors:** `401` missing/invalid key · `403` key role < ADMIN
 
@@ -5697,7 +5766,7 @@ List all loaded plugins (built-in + installed), with secret config values redact
     "version": "1.0.0",
     "type": "extension",
     "description": "Visual reply flows",
-    "author": "openwa-plugins",
+    "author": "relaywapp-plugins",
     "status": "enabled",
     "config": { "apiKey": "********" },
     "builtIn": false,
@@ -5732,8 +5801,8 @@ List the remote plugin catalog annotated with this instance's install state. (De
     "version": "1.2.0",
     "type": "extension",
     "description": "Auto-translate group messages",
-    "author": "openwa-plugins",
-    "download": "https://github.com/openwa-plugins/group-translate/releases/download/v1.2.0/group-translate.zip",
+    "author": "relaywapp-plugins",
+    "download": "https://example.invalid/plugins/group-translate-1.2.0.zip#sha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "installed": true,
     "installedVersion": "1.1.0",
     "updateAvailable": true
@@ -5741,7 +5810,7 @@ List the remote plugin catalog annotated with this instance's install state. (De
 ]
 ```
 
-Returns `[]` when no `plugins.catalogUrl` is configured.
+The `download` value above is an example-only, non-installable URL and digest. Returns `[]` when no `plugins.catalogUrl` is configured.
 
 **Errors:** `400` catalog fetch failed / not a JSON array · `401` · `403`
 
@@ -5834,7 +5903,7 @@ all kept. A directory the gateway did not install is still refused.
 
 Install a plugin by downloading its `.zip` from a URL (SSRF-guarded fetch: host validated, redirects followed with every hop re-validated through the guard and the chain capped at 5 hops, size-capped at `plugins.downloadMaxBytes`, default 5 MB). `https://` is accepted as-is; plain `http://` is only accepted when the URL carries a content pin (below) — the package is executable code and must be integrity-protected in transit; private-network targets remain subject to the SSRF guard. A redirect hop that downgrades back to plain `http://` mid-chain is likewise refused (set `PLUGIN_DOWNLOAD_ALLOW_INSECURE_REDIRECTS=true` only if your vendor genuinely redirects that way); a chain over the cap fails with an explicit "too many redirects" error.
 
-Content pinning: append `#sha256=<64 hex>` (URL fragment — never sent to the server) to require the downloaded bytes to match that digest; the fragment is the only honored marker — query params are deliberately ignored. A mismatch or a malformed marker fails the install closed. The pin is optional over HTTPS (TLS + the SSRF guard are the baseline) and REQUIRED over plain HTTP, which is rejected without one.
+Content pinning: append `#sha256=<64 hex>` (URL fragment — never sent to the server) to require the downloaded bytes to match that digest; the fragment is the only honored marker — query params are deliberately ignored. A mismatch or a malformed marker fails the install closed. A valid SHA-256 pin is required for plain `http://`, and for `https://` when `NODE_ENV=production` or `PLUGIN_INSTALL_REQUIRE_PIN=true`; `PLUGIN_INSTALL_REQUIRE_PIN=false` explicitly opts out of the production requirement.
 
 **Auth:** API key (ADMIN)
 
@@ -5842,11 +5911,13 @@ Content pinning: append `#sha256=<64 hex>` (URL fragment — never sent to the s
 
 | Field | Type   | Required | Constraints                                                     | Description                                                                            |
 | ----- | ------ | -------- | --------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| `url` | string | Yes      | `@IsUrl({ protocols:['http','https'], require_protocol:true })` | Absolute URL of the package; https as-is, plain http only with a `#sha256=` digest pin |
+| `url` | string | Yes      | `@IsUrl({ protocols:['http','https'], require_protocol:true })` | Absolute package URL; `#sha256=<64 hex>` is required by the pinning policy above |
 
 ```json
-{ "url": "https://github.com/openwa-plugins/chat-flow/releases/download/v1.0.0/chat-flow.zip" }
+{ "url": "https://example.invalid/plugins/chat-flow.zip#sha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855" }
 ```
+
+This is an example-only URL and digest, not an installable asset. Replace both with the trusted package URL and its verified SHA-256 digest.
 
 **Response** `201` — the newly installed `PluginDto`.
 
@@ -5997,7 +6068,7 @@ Set which sessions a session-scoped plugin is activated for. This is a **full re
 
 #### POST /api/plugins/:id/update
 
-Update an installed plugin in place from a URL, preserving config + enabled state. The new package is written to a staging sibling and validated BEFORE the running plugin is stopped, then swapped in with two renames (live → backup, staging → live); a failure before or during the swap restores the previous version, and a process crash mid-swap is reconciled at boot (the backup is restored when the live directory is missing), so an interrupted update can never make the plugin silently vanish. The URL follows the same transport rule as `install-url`: https as-is, plain http only with a `#sha256=` digest pin (fail-closed on mismatch).
+Update an installed plugin in place from a URL, preserving config + enabled state. The new package is written to a staging sibling and validated BEFORE the running plugin is stopped, then swapped in with two renames (live → backup, staging → live); a failure before or during the swap restores the previous version, and a process crash mid-swap is reconciled at boot (the backup is restored when the live directory is missing), so an interrupted update can never make the plugin silently vanish. The same pinning policy as `install-url` applies: a `#sha256=<64 hex>` pin is required for plain HTTP and for HTTPS in production or when `PLUGIN_INSTALL_REQUIRE_PIN=true`.
 
 **Auth:** API key (ADMIN)
 
@@ -6011,11 +6082,13 @@ Update an installed plugin in place from a URL, preserving config + enabled stat
 
 | Field | Type   | Required | Constraints                                                     | Description                                                                                          |
 | ----- | ------ | -------- | --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `url` | string | Yes      | `@IsUrl({ protocols:['http','https'], require_protocol:true })` | Absolute URL of the new `.zip` (SSRF-guarded download); https as-is, http only with a `#sha256=` pin |
+| `url` | string | Yes      | `@IsUrl({ protocols:['http','https'], require_protocol:true })` | Absolute URL of the new `.zip` (SSRF-guarded download); pin required by the policy above |
 
 ```json
-{ "url": "https://example.com/plugins/chat-flow-1.1.0.zip" }
+{ "url": "https://example.invalid/plugins/chat-flow-1.1.0.zip#sha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855" }
 ```
+
+This is an example-only URL and digest, not an installable asset. Replace both with the trusted package URL and its verified SHA-256 digest.
 
 **Response** `201` — the updated `PluginDto`.
 
@@ -6129,7 +6202,7 @@ For `tools/call` the result is an MCP `CallToolResult` (`content` array of `text
 
 > The full catalog of MCP tools (names, tiers, schemas) is documented separately — see **doc 24, MCP Integration**. This section documents only the transport endpoint.
 
-### 6.4.12 Search
+### 6.4.13 Search
 
 Base path `/api/search`. Cross-session full-text message search over an open `SearchProvider` contract;
 the built-in database full-text provider (PostgreSQL `tsvector`/`GIN`, SQLite `FTS5`) answers by
@@ -6205,7 +6278,7 @@ retryable). The built-in provider returns neither `502` nor `503`.
 > overridden via the query — there is no `sessionIds` query parameter, and `SearchService` overwrites
 > any session scope at the provider boundary.
 
-### 6.4.13 Profile (own account)
+### 6.4.14 Profile (own account)
 
 Manage the linked account's own profile. All routes are nested under `/api/sessions/:sessionId/profile` and require an **OPERATOR** key.
 
@@ -6272,7 +6345,7 @@ repeat.
 
 **Errors:** `400` session is not started · `401` · `403` engine refused the removal · `409` conflict or engine not ready (retryable) · `503` session not ready or dependency unavailable (retryable)
 
-### 6.4.14 Calls
+### 6.4.15 Calls
 
 Incoming-call management. A `call.received` webhook/socket event (§6.6) announces an incoming ringing call and carries the `callId` used below.
 
@@ -6335,7 +6408,7 @@ Reject a currently ringing incoming call. Only a live call can be rejected — t
 
 > **Auto-reject per session.** Set `"config": { "autoRejectCalls": true }` when creating a session to have the server reject every incoming call automatically — the `call.received` event is still dispatched first, so automations keep full visibility.
 
-### 6.4.15 Media conversion (opt-in)
+### 6.4.16 Media conversion (opt-in)
 
 Server-side transcoding into the shapes WhatsApp clients actually play. Disabled by default; set
 `MEDIA_CONVERSION_ENABLED=true`. The official Docker image already ships the `ffmpeg` binary these
@@ -6400,7 +6473,7 @@ file arrives.
 same `MEDIA_CONVERSION_MAX_OUTPUT_BYTES` cap (default 50 MiB) — and a client posting it onward is
 still bound by `BODY_SIZE_LIMIT` (default 25 MiB) on that next request.
 
-### 6.4.16 Automation rules (autoreply)
+### 6.4.17 Automation rules (autoreply)
 
 Single-message autoreply rules, managed under `/api/sessions/:sessionId/automation-rules`
 (`AutomationRuleController`). Every route requires an API key with **OPERATOR** role or higher.
@@ -6471,7 +6544,7 @@ Partial update (any subset of the create fields). **Auth:** API key (OPERATOR) �
 
 Delete a rule. **Auth:** API key (OPERATOR) · **Response** `204`.
 
-### 6.4.17 Integration fabric (ingress & instances)
+### 6.4.18 Integration fabric (ingress & instances)
 
 The operator surface of the Integration Fabric — **doc 25** holds the design (DLQ, ordering,
 per-instance fairness); this section is the route reference. An ADMIN key provisions per-plugin
@@ -6811,7 +6884,7 @@ Every registered webhook receives an HTTP `POST` with a JSON body of this shape:
 
 ### Event catalog
 
-These are the events OpenWA actually emits. A webhook is registered with an `events` list; an event is delivered to a webhook when its `events` array includes the event name or `"*"`.
+These are the events RelayWapp actually emits. A webhook is registered with an `events` list; an event is delivered to a webhook when its `events` array includes the event name or `"*"`.
 
 | Event                                             | When it fires                                                                                                                                                                                                                         | `data` payload sketch                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -6860,7 +6933,7 @@ Webhook delivery is **at-least-once**. A consumer can legitimately receive the s
 
 **Crash boundary.** Every delivery is recorded before it is attempted, and the record is retired once something durable owns it: the queue job in queued mode, the completed send in direct mode. A hard crash (SIGKILL, OOM) therefore leaves the record behind, and a bounded sweep (`WEBHOOK_RECONCILE_INTERVAL_MS`, default 60s) replays whatever is still stranded, reusing the stored `X-OpenWA-Idempotency-Key` so the retry stays deduplicable at your receiver. A delivery that keeps failing exhausts `WEBHOOK_RECONCILE_MAX_ATTEMPTS` and goes terminal rather than replaying forever. One window remains open: a crash between persisting the message and writing that record loses the delivery, because the two are not yet one transaction. The failure table records exhausted retries, plus over-budget, dispatch-capacity-exceeded, and shutdown-rejected deliveries with attempts 0. Read the last two as a report rather than a verdict: a delivery the dispatcher shed for capacity or refused during the drain keeps its record and is replayed by the same sweep, so a row there can belong to an event that was later delivered. Enabling the queue (`QUEUE_ENABLED=true`, needs Redis) makes the dispatch durable from the enqueue onward. In both modes, a graceful shutdown drains in-flight deliveries first: the queued path waits for each worker's current job, and the direct path waits up to `WEBHOOK_SHUTDOWN_DRAIN_MS` (default 5s; raise it to at least `WEBHOOK_TIMEOUT`, default 10s, if a slow receiver must finish).
 
-**Design your handler to be idempotent**, keyed on the `X-OpenWA-Idempotency-Key` header (see below). As a server-side safety net, OpenWA de-duplicates inbound `message.received` before dispatch (a re-fired event for an already-persisted message is dropped), so one webhook normally sees each inbound message once — but this is best-effort defense-in-depth and does not remove the need for consumer-side idempotency.
+**Design your handler to be idempotent**, keyed on the `X-OpenWA-Idempotency-Key` header (see below). As a server-side safety net, RelayWapp de-duplicates inbound `message.received` before dispatch (a re-fired event for an already-persisted message is dropped), so one webhook normally sees each inbound message once — but this is best-effort defense-in-depth and does not remove the need for consumer-side idempotency.
 
 ### HMAC signature
 
@@ -6916,7 +6989,7 @@ Recurring lifecycle events (and `message.reaction` / `message.edited`) carry the
 
 ### Retries with exponential backoff
 
-When the queue is enabled, a non-2xx response, timeout (`WEBHOOK_TIMEOUT`, default `10000` ms), or network error schedules a retry. The number of attempts comes from the webhook's `retryCount` (default `3`) and the delay grows **exponentially** from a base of `WEBHOOK_RETRY_DELAY` (default `5000` ms). Each retry reuses the same `idempotencyKey` and increments `X-OpenWA-Retry-Count`. If Redis/BullMQ rejects the initial enqueue, OpenWA logs a `webhook:error` hook event and falls back to direct delivery with the same inline retry budget. When the queue is disabled, delivery is direct with the same retry budget applied inline.
+When the queue is enabled, a non-2xx response, timeout (`WEBHOOK_TIMEOUT`, default `10000` ms), or network error schedules a retry. The number of attempts comes from the webhook's `retryCount` (default `3`) and the delay grows **exponentially** from a base of `WEBHOOK_RETRY_DELAY` (default `5000` ms). Each retry reuses the same `idempotencyKey` and increments `X-OpenWA-Retry-Count`. If Redis/BullMQ rejects the initial enqueue, RelayWapp logs a `webhook:error` hook event and falls back to direct delivery with the same inline retry budget. When the queue is disabled, delivery is direct with the same retry budget applied inline.
 
 ### SSRF guard on registration
 

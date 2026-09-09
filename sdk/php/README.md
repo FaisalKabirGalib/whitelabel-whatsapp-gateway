@@ -1,6 +1,6 @@
-# rmyndharis/openwa
+# RelayWapp PHP SDK
 
-Official PHP SDK for the [OpenWA](https://github.com/rmyndharis/OpenWA) WhatsApp API Gateway.
+Official PHP SDK for [RelayWapp](https://github.com/FaisalKabirGalib/whitelabel-whatsapp-gateway) WhatsApp API Gateway.
 
 A synchronous client built on [Guzzle](https://docs.guzzlephp.org/), PSR-4 autoloaded.
 
@@ -29,7 +29,7 @@ $client->sessions->start('my-session');
 
 $result = $client->messages->sendText('my-session', [
     'chatId' => '628123456789@c.us',
-    'text'   => 'Hello from the OpenWA PHP SDK!',
+    'text'   => 'Hello from the RelayWapp PHP SDK!',
 ]);
 echo $result['messageId'];
 ```
@@ -79,7 +79,7 @@ try {
 ## Releasing
 
 Packagist installs this SDK from the mirror repository
-[`rmyndharis/openwa-php`](https://github.com/rmyndharis/openwa-php), not from the
+`rmyndharis/openwa-php`, not from the
 monorepo — Composer needs `composer.json` at a repository root and does not
 support subdirectories. Two workflows keep that mirror correct:
 

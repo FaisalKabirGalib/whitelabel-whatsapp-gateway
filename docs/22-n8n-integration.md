@@ -2,23 +2,26 @@
 
 ## Overview
 
-OpenWA provides official n8n community nodes for integrating WhatsApp automation into n8n workflows. This enables users to build powerful automations combining WhatsApp messaging with hundreds of other services available in n8n.
+RelayWapp WhatsApp Gateway provides official n8n community nodes for integrating WhatsApp automation into n8n workflows. This enables users to build powerful automations combining WhatsApp messaging with hundreds of other services available in n8n.
 
-**Repository:** https://github.com/rmyndharis/OpenWA-n8n
+**Node source:** https://github.com/rmyndharis/OpenWA-n8n
 **npm Package:** `@rmyndharis/n8n-nodes-openwa`
+
+The node package retains its existing distribution name and is developed in its separate
+source repository. It connects to RelayWapp WhatsApp Gateway through its public API.
 
 ## Architecture
 
 ```
 ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│   n8n Workflow  │────▶│  OpenWA Node    │────▶│  OpenWA API     │
+│   n8n Workflow  │────▶│  OpenWA Node    │────▶│ RelayWapp API   │
 │                 │     │  (credentials)  │     │  (your server)  │
 └─────────────────┘     └─────────────────┘     └─────────────────┘
                                                         │
                                                         ▼
 ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│   n8n Workflow  │◀────│ OpenWA Trigger  │◀────│  Webhook POST   │
-│   (triggered)   │     │  (listens)      │     │  from OpenWA    │
+│   n8n Workflow  │◀────│ OpenWA Trigger  │◀────│ Webhook POST    │
+│   (triggered)   │     │  (listens)      │     │ from RelayWapp  │
 └─────────────────┘     └─────────────────┘     └─────────────────┘
 ```
 
@@ -43,14 +46,14 @@ npm install @rmyndharis/n8n-nodes-openwa
 
 ### OpenWA Node
 
-Execute operations on your OpenWA server.
+Execute operations on your RelayWapp WhatsApp Gateway server.
 
 #### Credentials Setup
 
 | Field      | Description                      | Example                  |
 | ---------- | -------------------------------- | ------------------------ |
-| Server URL | OpenWA server URL (without /api) | `https://wa.example.com` |
-| API Key    | API key from OpenWA dashboard    | `owa_xxxxxxxx...`        |
+| Server URL | RelayWapp server URL (without /api) | `https://wa.example.com` |
+| API Key    | API key from RelayWapp dashboard    | `owa_xxxxxxxx...`        |
 
 #### Resources & Operations
 
@@ -67,7 +70,7 @@ Execute operations on your OpenWA server.
 | Webhook  | Create        | Create a webhook            | `POST /api/sessions/:id/webhooks`               |
 | Webhook  | Delete        | Delete a webhook            | `DELETE /api/sessions/:id/webhooks/:webhookId`  |
 
-### OpenWA Trigger Node
+### OpenWA Trigger
 
 Start workflows when WhatsApp events occur.
 
@@ -105,8 +108,8 @@ Start workflows when WhatsApp events occur.
 
 #### How It Works
 
-1. When workflow is activated, the trigger creates a webhook in OpenWA
-2. OpenWA sends events to n8n's webhook URL
+1. When workflow is activated, the trigger creates a webhook in RelayWapp WhatsApp Gateway
+2. RelayWapp WhatsApp Gateway sends events to n8n's webhook URL
 3. When workflow is deactivated, the webhook is automatically deleted
 
 #### Output Data Format
@@ -143,7 +146,7 @@ Start workflows when WhatsApp events occur.
 Automatically reply to incoming messages with a welcome message.
 
 ```
-[OpenWA Trigger] → [IF: Check keyword] → [OpenWA: Send Text]
+[OpenWA Trigger] → [IF: Check keyword] → [OpenWA Node: Send Text]
      │
      └── Events: message.received
 ```
@@ -152,14 +155,14 @@ Automatically reply to incoming messages with a welcome message.
 
 - Trigger: `message.received`
 - IF Node: Check if `{{$json.data.body}}` contains "hello"
-- OpenWA: Send Text with welcome message
+- OpenWA Node: Send Text with welcome message through RelayWapp
 
 ### 2. Lead Collection to Google Sheets
 
 Capture incoming messages and save to Google Sheets.
 
 ```
-[OpenWA Trigger] → [Google Sheets: Append] → [OpenWA: Send Text]
+[OpenWA Trigger] → [Google Sheets: Append] → [OpenWA Node: Send Text]
      │                    │
      │                    └── Save: name, phone, message
      └── Events: message.received
@@ -188,7 +191,7 @@ Please check and reconnect.
 Send WhatsApp notification when new order is received.
 
 ```
-[Webhook: New Order] → [OpenWA: Send Text]
+[Webhook: New Order] → [OpenWA Node: Send Text]
                             │
                             └── "Thank you for your order #{{$json.orderId}}"
 ```
@@ -198,7 +201,7 @@ Send WhatsApp notification when new order is received.
 Send daily reminders to a list of contacts.
 
 ```
-[Schedule Trigger] → [Google Sheets: Get Rows] → [Loop] → [OpenWA: Send Text]
+[Schedule Trigger] → [Google Sheets: Get Rows] → [Loop] → [OpenWA Node: Send Text]
      │                      │                                    │
      └── Daily 9AM          └── Get contacts                     └── Send reminder
 ```
@@ -217,7 +220,7 @@ See [n8n Appointment Booking Workflow](./examples/n8n-appointment-booking.md) fo
                                                │
                          ┌─────────────────────┴─────────────────────┐
                          ▼                                           ▼
-              [Create Booking] → [OpenWA: Send Text]      [OpenWA: Send Text]
+                [Create Booking] → [OpenWA Node: Send Text] [OpenWA Node: Send Text]
                   confirmed confirmation                  alternative slots
 ```
 
@@ -238,7 +241,7 @@ Always add error handling in your workflows:
 WhatsApp has rate limits. Add delays between messages:
 
 ```
-[Loop Over Items] → [Wait: 2 seconds] → [OpenWA: Send Text]
+[Loop Over Items] → [Wait: 2 seconds] → [OpenWA Node: Send Text]
 ```
 
 ### 3. Message Formatting
@@ -261,10 +264,10 @@ Always use the correct format for chat IDs:
 
 ### Credential Test Failed
 
-1. Verify OpenWA server is running
+1. Verify RelayWapp WhatsApp Gateway is running
 2. Check API key is correct
 3. Ensure server URL doesn't have trailing slash
-4. Verify network connectivity between n8n and OpenWA
+4. Verify network connectivity between n8n and RelayWapp WhatsApp Gateway
 
 ### Trigger Not Receiving Events
 
@@ -272,15 +275,15 @@ Always use the correct format for chat IDs:
    node two URLs: a test URL (`https://your-n8n/webhook-test/…`) and a production URL
    (`https://your-n8n/webhook/…`). The test URL is registered only while the editor is listening and
    stops after a single request, so a workflow wired to it receives one event and then goes silent.
-   Activate the workflow and point OpenWA at the production URL.
-2. Check webhook was created in OpenWA dashboard
-3. Verify n8n webhook URL is accessible from OpenWA server
+   Activate the workflow and point RelayWapp WhatsApp Gateway at the production URL.
+2. Check webhook was created in the RelayWapp dashboard
+3. Verify n8n webhook URL is accessible from the RelayWapp server
 4. Check firewall/proxy settings
 5. Ensure session is connected and active
 6. For a call-outcome trigger, confirm the session runs Baileys — see the note under the trigger
    event table above
-7. Ask OpenWA which side dropped the event:
-   `GET /api/webhooks/delivery-failures?sessionId={sessionId}` (ADMIN key). A row means OpenWA
+7. Ask RelayWapp WhatsApp Gateway which side dropped the event:
+   `GET /api/webhooks/delivery-failures?sessionId={sessionId}` (ADMIN key). A row means RelayWapp WhatsApp Gateway
    delivered and n8n rejected it; an empty list means the event never reached delivery at all
 
 ### Message Not Sending
@@ -329,7 +332,7 @@ docker run -it --rm \
 
 ## Related Documentation
 
-- [OpenWA API Specification](./06-api-specification.md)
+- [RelayWapp WhatsApp Gateway API Specification](./06-api-specification.md)
 - [Webhook System](./03-system-architecture.md#353-webhook-system)
 - [n8n Appointment Booking Workflow](./examples/n8n-appointment-booking.md)
 - [n8n Documentation](https://docs.n8n.io/)

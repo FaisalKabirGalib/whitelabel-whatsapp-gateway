@@ -1,13 +1,14 @@
 apiVersion: v2
 name: openwa
-description: OpenWA — WhatsApp API. Single-instance StatefulSet (see values.yaml replicaCount warning).
+description: RelayWapp — Whitelabel WhatsApp Gateway. Single-instance StatefulSet (see values.yaml replicaCount warning).
 type: application
-version: 0.1.20
-appVersion: '0.23.4'
+version: 0.1.21
+appVersion: latest
 keywords:
   - whatsapp
-  - openwa
+  - relaywapp
+  - gateway
   - api
-home: https://github.com/rmyndharis/OpenWA
+home: https://github.com/FaisalKabirGalib/whitelabel-whatsapp-gateway
 sources:
-  - https://github.com/rmyndharis/OpenWA
+  - https://github.com/FaisalKabirGalib/whitelabel-whatsapp-gateway

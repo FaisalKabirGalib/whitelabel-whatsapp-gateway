@@ -1,6 +1,6 @@
-# openwa
+# RelayWapp Helm Chart
 
-Helm chart for [OpenWA](https://github.com/rmyndharis/OpenWA) — WhatsApp API.
+Helm chart for [RelayWapp](https://github.com/FaisalKabirGalib/whitelabel-whatsapp-gateway) — WhatsApp API.
 
 > **Single instance only.** A session lease stops two pods from launching the same session,
 > but API-key socket eviction, WS rate-limit buckets and in-flight bulk batches are still

@@ -31,7 +31,7 @@
 
 ## 19.1 Overview
 
-The plugin architecture enables OpenWA extensibility without modifying the core codebase. Plugins can add new features, integrate with external services, or customize behavior.
+The plugin architecture enables RelayWapp WhatsApp Gateway extensibility without modifying the core codebase. Plugins can add new features, integrate with external services, or customize behavior.
 
 ### Design Goals
 
@@ -119,7 +119,7 @@ a host version, except for the SDK-major check applied to a manifest that declar
   "name": "My Awesome Plugin",
   "version": "1.0.0",
   "type": "extension",
-  "description": "An awesome plugin for OpenWA",
+  "description": "An awesome plugin for RelayWapp WhatsApp Gateway",
   "author": "Your Name",
   "license": "MIT",
 
@@ -379,7 +379,7 @@ export interface PluginStorage {
 
 ```mermaid
 sequenceDiagram
-    participant Core as OpenWA Core
+    participant Core as RelayWapp WhatsApp Gateway Core
     participant HM as Hook Manager
     participant P1 as Plugin 1
     participant P2 as Plugin 2
@@ -511,7 +511,7 @@ the one version gate is `validateIngressManifest`, which refuses a manifest decl
 decision across a restart; the decision is persisted separately as `enabledByOperator`. On
 `onApplicationBootstrap` — after the rest of the app is wired — the loader re-enables every non-built-in
 plugin carrying that flag, so an upgrade, host reboot or container restart no longer silently switches
-off every extension ([#856](https://github.com/rmyndharis/OpenWA/issues/856)). Restoring is best-effort
+off every extension ([#856](https://github.com/FaisalKabirGalib/whitelabel-whatsapp-gateway/issues/856)). Restoring is best-effort
 and sequential: a plugin that fails is logged (`plugin_restore_failed`), left in `ERROR`, and never
 holds up startup. Built-ins are skipped — `EngineFactory` enables the engine named by `engine.type`.
 
@@ -630,7 +630,7 @@ URL / catalog), not an npm/github source descriptor.
 | `GET /plugins/catalog`               | List the remote plugin catalog, annotated with install state                                               |
 | `GET /plugins/:id`                   | Get a single plugin                                                                                        |
 | `POST /plugins/install`              | Install from an uploaded `.zip` (`multipart/form-data`, field `file`, ≤ 5 MB)                              |
-| `POST /plugins/install-url`          | Install by downloading a `.zip` from an https URL (SSRF-guarded; optional `#sha256=` digest pin)           |
+| `POST /plugins/install-url`          | Install by downloading a `.zip` from an HTTPS URL (SSRF-guarded; `#sha256=` required in production or when `PLUGIN_INSTALL_REQUIRE_PIN=true`) |
 | `POST /plugins/:id/update`           | Update an installed plugin in place from a URL (staged swap, crash-safe; preserves config + enabled state) |
 | `POST /plugins/:id/enable`           | Enable a plugin                                                                                            |
 | `POST /plugins/:id/disable`          | Disable a plugin                                                                                           |

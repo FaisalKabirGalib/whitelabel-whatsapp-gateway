@@ -165,7 +165,7 @@ IPv4 address first.
 
 ### In Transit
 
-OpenWA serves plain HTTP on its port; terminate **TLS at your reverse proxy / load balancer** (nginx, Traefik, Caddy) and expose the gateway only over HTTPS in production. The API key is bearer-equivalent and is sent on every request, so it must never traverse plaintext `http://` outside local development.
+RelayWapp serves plain HTTP on its port; terminate **TLS at your reverse proxy / load balancer** (nginx, Traefik, Caddy) and expose the gateway only over HTTPS in production. The API key is bearer-equivalent and is sent on every request, so it must never traverse plaintext `http://` outside local development.
 
 ### At Rest
 
@@ -338,7 +338,7 @@ app.enableCors({
 
 ```mermaid
 sequenceDiagram
-    participant OW as OpenWA
+    participant OW as RelayWapp
     participant WH as Webhook Endpoint
 
     OW->>OW: Create payload
@@ -352,7 +352,7 @@ sequenceDiagram
 ### Signature Verification
 
 ```typescript
-// OpenWA: Generate signature
+// RelayWapp: Generate signature
 function signPayload(payload: object, secret: string): string {
   const hmac = crypto.createHmac('sha256', secret);
   hmac.update(JSON.stringify(payload));
@@ -530,7 +530,7 @@ flowchart TB
 | Webhook secrets                   | Database — **plaintext**; not in the webhook read DTOs, and omitted from `GET /api/infra/export-data` webhook rows | Per webhook                                     |
 | Session auth state                | File system (data volume) — **not encrypted**                                                                      | Never (tied to the WA session)                  |
 
-> There is no application `ENCRYPTION_KEY` — OpenWA does not encrypt data at rest (see §4.4). The rotation cadences above are operational recommendations, not enforced by the app.
+> There is no application `ENCRYPTION_KEY` — RelayWapp does not encrypt data at rest (see §4.4). The rotation cadences above are operational recommendations, not enforced by the app.
 
 ### Environment Variables Security
 
@@ -547,7 +547,7 @@ docker secret create db_password ./secret.txt
 
 ### Docker Secrets
 
-> **Caveat:** the `*_FILE` convention shown below requires a secret-file reader in the app (see "Reading Secrets" below), which is **not currently implemented** — OpenWA reads secrets straight from environment variables. Until that helper exists, pass secrets as plain env vars (e.g. an `.env` file with restricted permissions) rather than `_FILE` paths.
+> **Caveat:** the `*_FILE` convention shown below requires a secret-file reader in the app (see "Reading Secrets" below), which is **not currently implemented** — RelayWapp reads secrets straight from environment variables. Until that helper exists, pass secrets as plain env vars (e.g. an `.env` file with restricted permissions) rather than `_FILE` paths.
 
 ```yaml
 # Illustrative overlay — not the docker-compose.yml shipped in this repo
@@ -569,7 +569,7 @@ secrets:
 
 ### Reading Secrets in Application
 
-> **Not implemented as shown.** OpenWA does **not** read `<NAME>_FILE` Docker-secret files — there is no `getSecret()` helper today. Secrets come straight from `process.env`, layered at boot as `process.env` → `.env` → `data/.env.generated` (`override:false`, so a real environment value wins). The function below is a suggested pattern to add if you want Docker-secret `_FILE` support; as-is, `DATABASE_PASSWORD_FILE` is not consulted.
+> **Not implemented as shown.** RelayWapp does **not** read `<NAME>_FILE` Docker-secret files — there is no `getSecret()` helper today. Secrets come straight from `process.env`, layered at boot as `process.env` → `.env` → `data/.env.generated` (`override:false`, so a real environment value wins). The function below is a suggested pattern to add if you want Docker-secret `_FILE` support; as-is, `DATABASE_PASSWORD_FILE` is not consulted.
 
 ```typescript
 // config/secrets.ts
@@ -598,7 +598,7 @@ const masterKey = getSecret('API_MASTER_KEY');
 
 ### Key Rotation Procedure
 
-> **Not applicable today.** OpenWA stores no encrypted-at-rest data (see §4.4), so there is no data-encryption key to rotate and no `rotateEncryptionKey()` in the codebase. The flow below is illustrative for if/when field-level encryption is added. To rotate the `API_MASTER_KEY` or `API_KEY_PEPPER`, use the API-key endpoints (§4.2) — rotating the pepper invalidates existing key hashes.
+> **Not applicable today.** RelayWapp stores no encrypted-at-rest data (see §4.4), so there is no data-encryption key to rotate and no `rotateEncryptionKey()` in the codebase. The flow below is illustrative for if/when field-level encryption is added. To rotate the `API_MASTER_KEY` or `API_KEY_PEPPER`, use the API-key endpoints (§4.2) — rotating the pepper invalidates existing key hashes.
 
 ```mermaid
 flowchart TB
@@ -814,7 +814,7 @@ flowchart TB
 
 ### Emergency Contacts
 
-A template for an operator to fill in and keep outside the repository — OpenWA ships no
+A template for an operator to fill in and keep outside the repository — RelayWapp ships no
 `config/incident-response.yml` and reads no such file. The only contact the project itself
 publishes is the vulnerability-reporting channel in [SECURITY.md](../SECURITY.md); the on-call,
 channel and status-page entries below are placeholders with no upstream default.
@@ -829,7 +829,7 @@ contacts:
 
   security_lead:
     name: 'Security Lead'
-    email: 'yudhi@rmyndharis.com' # see SECURITY.md — GitHub Security Advisories preferred
+    email: 'security@relaywapp.example' # replace with your security contact
 
   escalation:
     - level: 1

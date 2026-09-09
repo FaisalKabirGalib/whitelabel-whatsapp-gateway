@@ -1,6 +1,6 @@
 # n8n Appointment Booking Workflow
 
-This example shows how to use OpenWA and n8n to collect appointment requests over WhatsApp, check availability in an external system, and send a confirmation or alternative time slots.
+This example shows how to use RelayWapp WhatsApp Gateway and n8n to collect appointment requests over WhatsApp, check availability in an external system, and send a confirmation or alternative time slots.
 
 The workflow is intentionally generic. The availability source can be Google Calendar, Cal.com, a CRM, a database, or any HTTP API that returns available slots.
 
@@ -14,7 +14,7 @@ The workflow is intentionally generic. The availability source can be Google Cal
               ▼
 [IF: booking intent?]
       │
-      ├── false → [OpenWA: Send Text]
+      ├── false → [OpenWA Node: Send Text]
       │             "Thanks for your message. A team member will reply soon."
       │
       └── true
@@ -25,19 +25,19 @@ The workflow is intentionally generic. The availability source can be Google Cal
               ▼
 [Availability Source]
       │
-      ├── available → [Create Booking] → [OpenWA: Send Text confirmation]
+      ├── available → [Create Booking] → [OpenWA Node: Send Text confirmation]
       │
-      └── unavailable → [OpenWA: Send Text with alternative slots]
+      └── unavailable → [OpenWA Node: Send Text with alternative slots]
 ```
 
 ## Trigger
 
-Use the **OpenWA Trigger** node.
+Use the **OpenWA Trigger** node, which registers its webhook with RelayWapp WhatsApp Gateway.
 
 | Field   | Value                         |
 | ------- | ----------------------------- |
 | Event   | `message.received`            |
-| Session | Your connected OpenWA session |
+| Session | Your connected RelayWapp WhatsApp Gateway session |
 
 The incoming message body is available at:
 
@@ -95,7 +95,7 @@ The availability step should return whether the requested slot is available and,
 
 ## Confirmation Message
 
-When the requested slot is available, create the booking in your scheduling source and send a confirmation with the **OpenWA: Send Text** node.
+When the requested slot is available, create the booking in your scheduling source and send a confirmation with the **OpenWA Node** using its **Message → Send Text** operation against RelayWapp WhatsApp Gateway.
 
 | Field     | Value                |
 | --------- | -------------------- |
@@ -137,9 +137,9 @@ Reply with 1 or 2 to confirm one of these options.
 
 ## Minimal Node Checklist
 
-- OpenWA Trigger: receives `message.received` events.
+- OpenWA Trigger: receives `message.received` events from RelayWapp WhatsApp Gateway.
 - IF: detects booking intent.
 - Set: normalizes `chatId`, message body, requested date/time, and service.
 - Availability node: checks the calendar, API, database, or spreadsheet.
 - Booking node: creates the appointment only when a slot is available.
-- OpenWA Send Text: sends confirmation, alternatives, or clarification.
+- OpenWA Node: sends confirmation, alternatives, or clarification through RelayWapp WhatsApp Gateway.

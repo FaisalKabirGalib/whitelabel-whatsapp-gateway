@@ -1,6 +1,6 @@
-# OpenWA SDKs
+# RelayWapp SDKs
 
-Official client libraries for the [OpenWA](https://github.com/rmyndharis/OpenWA)
+Official client libraries for [RelayWapp](https://github.com/FaisalKabirGalib/whitelabel-whatsapp-gateway),
 WhatsApp API Gateway.
 
 All five SDKs are **hand-written** against the exact API surface (paths, DTOs,
@@ -78,7 +78,7 @@ const client = new OpenWAClient({
 await client.sessions.start('my-session');
 const result = await client.messages.sendText('my-session', {
   chatId: '628123456789@c.us',
-  text: 'Hello from the OpenWA SDK!',
+  text: 'Hello from the RelayWapp SDK!',
 });
 console.log(result.messageId);
 ```
@@ -116,7 +116,7 @@ client = OpenWAClient(
 client.sessions.start("my-session")
 result = client.messages.send_text("my-session", {
     "chatId": "628123456789@c.us",
-    "text": "Hello from the OpenWA Python SDK!",
+    "text": "Hello from the RelayWapp Python SDK!",
 })
 print(result["messageId"])
 ```
@@ -142,7 +142,7 @@ $client = new Client([
 $client->sessions->start('my-session');
 $result = $client->messages->sendText('my-session', [
     'chatId' => '628123456789@c.us',
-    'text'   => 'Hello from the OpenWA PHP SDK!',
+    'text'   => 'Hello from the RelayWapp PHP SDK!',
 ]);
 echo $result['messageId'];
 ```
@@ -171,7 +171,7 @@ client.sessions.start("my-session");
 MessageResponse result = client.messages.sendText("my-session",
     SendTextRequest.builder()
         .chatId("628123456789@c.us")
-        .text("Hello from the OpenWA Java SDK!")
+        .text("Hello from the RelayWapp Java SDK!")
         .build());
 System.out.println(result.messageId());
 ```
@@ -205,7 +205,7 @@ ctx := context.Background()
 client.Sessions.Start(ctx, "my-session")
 res, err := client.Messages.SendText(ctx, "my-session", openwa.SendTextRequest{
     ChatID: "628123456789@c.us",
-    Text:   "Hello from the OpenWA Go SDK!",
+    Text:   "Hello from the RelayWapp Go SDK!",
 })
 fmt.Println(res.MessageID)
 ```

@@ -1,10 +1,10 @@
 # Webhook Signature Verification
 
-OpenWA signs webhook deliveries when a webhook is configured with a secret. Receivers should verify the signature before processing the event.
+RelayWapp WhatsApp Gateway signs webhook deliveries when a webhook is configured with a secret. Receivers should verify the signature before processing the event.
 
 ## Headers
 
-OpenWA sends these system headers with webhook deliveries:
+RelayWapp WhatsApp Gateway sends these system headers with webhook deliveries:
 
 | Header                     | Description                                                        |
 | -------------------------- | ------------------------------------------------------------------ |

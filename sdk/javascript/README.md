@@ -1,6 +1,6 @@
-# @rmyndharis/openwa
+# RelayWapp JavaScript / TypeScript SDK
 
-Official JavaScript/TypeScript SDK for the [OpenWA](https://github.com/rmyndharis/OpenWA) WhatsApp API Gateway.
+Official JavaScript/TypeScript SDK for [RelayWapp](https://github.com/FaisalKabirGalib/whitelabel-whatsapp-gateway) WhatsApp API Gateway.
 
 Ships dual CJS + ESM builds with bundled type declarations.
 
@@ -26,7 +26,7 @@ await client.sessions.start('my-session');
 
 const result = await client.messages.sendText('my-session', {
   chatId: '628123456789@c.us',
-  text: 'Hello from the OpenWA SDK!',
+  text: 'Hello from the RelayWapp SDK!',
 });
 console.log(result.messageId);
 ```
@@ -61,8 +61,8 @@ One-time setup, required **before** the first tag — on npmjs.com, open the
 package settings for `@rmyndharis/openwa` and add a Trusted Publisher:
 
 - Provider: **GitHub Actions**
-- Organization: `rmyndharis`
-- Repository: `OpenWA`
+- Organization: `FaisalKabirGalib`
+- Repository: `whitelabel-whatsapp-gateway`
 - Workflow filename: `js-sdk-release.yml` (the extension is part of the value)
 
 There are no repository secrets to add. Until the trusted publisher exists npm
