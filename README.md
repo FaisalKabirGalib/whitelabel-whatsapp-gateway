@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/logo/openwa_logo.webp" alt="Default logo asset" width="200"/>
+  <img src="dashboard/public/relaywapp-mark.svg" alt="RelayWapp" width="200"/>
 </p>
 
 <h1 align="center">RelayWapp</h1>

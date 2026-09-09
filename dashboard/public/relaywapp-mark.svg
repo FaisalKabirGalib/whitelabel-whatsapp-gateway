@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title id="title">RelayWapp</title>
+  <rect width="128" height="128" rx="30" fill="#0F766E"/>
+  <path d="M35 68C35 49.8 49.8 35 68 35M35 82C35 57.1 55.1 37 80 37" fill="none" stroke="#99F6E4" stroke-linecap="round" stroke-width="9"/>
+  <path d="M47 89L66 70L84 89" fill="none" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="9"/>
+  <circle cx="47" cy="89" r="9" fill="#FFF"/>
+  <circle cx="66" cy="70" r="9" fill="#FFF"/>
+  <circle cx="84" cy="89" r="9" fill="#FFF"/>
+</svg>

@@ -62,7 +62,7 @@ export function Login({ onLogin }: LoginProps) {
     <div className="login-container">
       <div className="login-card">
         <div className="login-logo">
-          <img src={branding.logoUrl || '/openwa_logo.webp'} alt={branding.productName} className="logo-icon" />
+          <img src={branding.logoUrl || '/relaywapp-mark.svg'} alt={branding.productName} className="logo-icon" />
           <span className="version-info">
             {t('login.version', {
               version: __APP_VERSION__,

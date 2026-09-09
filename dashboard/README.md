@@ -1,7 +1,7 @@
 # RelayWapp Dashboard
 
 <p align="center">
-  <img src="../docs/logo/openwa_logo.webp" alt="Default logo asset" width="120"/>
+  <img src="public/relaywapp-mark.svg" alt="RelayWapp" width="120"/>
 </p>
 
 Modern web dashboard for managing RelayWapp WhatsApp API Gateway sessions, webhooks, and infrastructure.
